@@ -1,99 +1,43 @@
 <template>
-  <div>
-    <Beverage :isIced="currentTemp === 'Cold'" />
+  <main>
+    <Beverage :isIced="store.currentTemp === 'Cold'" />
+
     <ul class="option-row">
-      <li v-for="temp in temps" :key="temp"  class="align-item">
-          <label>
-            <input
-              type="radio"
-              name="temperature"
-              :id="`r${temp}`"
-              :value="temp"
-              v-model="currentTemp"
-            />
-            {{ temp }}
-          </label>
+      <li v-for="temp in store.temps" :key="temp" class="align-item">
+        <label><input type="radio" :value="temp" v-model="store.currentTemp" /> {{ temp }}</label>
       </li>
     </ul>
+
     <ul class="option-row">
-      <li v-for="base in bases" :key="base.id" class="align-item">
-          <label>
-            <input
-              type="radio"
-              name="bases"
-              :id="`b-${base.id}`"
-              :value="base"
-              v-model="currentBase"
-            />
-            {{ base.name }}
-          </label>
+      <li v-for="base in store.allBases" :key="base.id" class="align-item">
+        <label><input type="radio" :value="base" v-model="store.currentBase" /> {{ base.name }}</label>
       </li>
     </ul>
+
     <ul class="option-row">
-      <li v-for="syrup in syrups" :key="syrup.id" class="align-item">
-          <label>
-            <input
-              type="radio"
-              name="syrups"
-              :id="`s-${syrup.id}`"
-              :value="syrup"
-              v-model="currentSyrup"
-            />
-            {{ syrup.name }}
-          </label>
+      <li v-for="syrup in store.allSyrups" :key="syrup.id" class="align-item">
+        <label><input type="radio" :value="syrup" v-model="store.currentSyrup" /> {{ syrup.name }}</label>
       </li>
     </ul>
+
     <ul class="option-row">
-      <li v-for="creamer in creamers" :key="creamer.id" class="align-item">
-          <label>
-            <input
-              type="radio"
-              name="creamers"
-              :id="`c-${creamer.id}`"
-              :value="creamer"
-              v-model="currentCreamer"
-            />
-            {{ creamer.name }}
-          </label>
+      <li v-for="creamer in store.allCreamers" :key="creamer.id" class="align-item">
+        <label><input type="radio" :value="creamer" v-model="store.currentCreamer" /> {{ creamer.name }}</label>
       </li>
     </ul>
-  </div>
+
+    <div class="make-beverage-controls">
+      <input v-model="store.beverageName" placeholder="Beverage Name" />
+      <button @click="store.makeBeverage">🍺 Make Beverage</button>
+    </div>
+
+    <div id="beverage-container">
+      <div v-for="(bev, index) in store.savedBeverages" :key="index">
+        <label>
+          <input type="radio" name="saved-list" @change="store.showBeverage(bev)" />
+          {{ bev.name }}
+        </label>
+      </div>
+    </div>
+  </main>
 </template>
-
-<script setup lang="ts">
-import Beverage from "./components/Beverage.vue";
-import { temps, currentTemp, bases, currentBase, creamers, currentCreamer, syrups, currentSyrup } from "./stores/beverage";
-</script>
-
-<style lang="scss">
-body,
-html {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  background-color: #6e4228;
-  background: linear-gradient(to bottom, #6e4228 0%, #956f5a 100%);
-}
-
-ul {
-  list-style: none;
-}
-
-.option-row {
-  display: flex;
-  flex-wrap: wrap;
-  padding: 0;
-}
-
-.align-item {
-  width: 120px;
-}
-
-.align-item label {
-  display: flex;
-  align-items: center;
-  gap: 0.35rem;
-}
-</style>
